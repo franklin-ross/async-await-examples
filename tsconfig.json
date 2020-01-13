@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "noEmit": true,
+    "module": "CommonJS",
+    "lib": ["ES2015"],
+    "moduleResolution": "node",
+    "alwaysStrict": true,
+    "target": "ES5"
+  }
+}

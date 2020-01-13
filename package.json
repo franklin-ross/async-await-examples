@@ -1,0 +1,19 @@
+{
+  "name": "async-await-examples",
+  "version": "1.0.0",
+  "description": "Workshop examples for async-await functionality in JS/TS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Franklin Ross",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jest": "^24.0.25",
+    "@types/node": "^13.1.6",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.3.0",
+    "ts-node": "^8.6.1",
+    "typescript": "^3.7.4"
+  }
+}
