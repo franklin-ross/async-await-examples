@@ -2,5 +2,9 @@
   "editor.formatOnSave": true,
   "gitlens.codeLens.enabled": false,
   "dotnet-test-explorer.autoWatch": true,
-  "dotnet-test-explorer.testProjectPath": "*.csproj"
+  "dotnet-test-explorer.testProjectPath": "*.csproj",
+  "files.exclude": {
+    "bin/": true,
+    "obj/": true
+  }
 }
