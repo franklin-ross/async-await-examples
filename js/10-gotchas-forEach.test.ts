@@ -5,8 +5,8 @@ const input = [1, 2];
 it("Do await Promise.all() if calls can be concurrent", async () => {
   const results = await Promise.all(
     input.map(async item => {
-      await forceAsync();
-      return item;
+      const result = await forceAsync(item);
+      return result;
     })
   );
   expect(results).toEqual(input);
@@ -15,8 +15,8 @@ it("Do await Promise.all() if calls can be concurrent", async () => {
 it("Do await sequentially if calls must be sequential", async () => {
   const results = [];
   for (const item of input) {
-    await forceAsync();
-    results.push(item);
+    const result = await forceAsync(item);
+    results.push(result);
   }
   expect(results).toEqual(input);
 });
@@ -24,16 +24,16 @@ it("Do await sequentially if calls must be sequential", async () => {
 it("Don't await array.forEach()", async () => {
   const results = [];
   await input.forEach(async item => {
-    await forceAsync();
-    results.push(item);
+    const result = await forceAsync(item);
+    results.push(result);
   });
   expect(results).toEqual(input);
 });
 
 it("Don't await array.map() directly", async () => {
   const results = await input.map(async item => {
-    await forceAsync();
-    return item;
+    const result = await forceAsync(item);
+    return result;
   });
   expect(results).toEqual(input);
 });
