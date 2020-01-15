@@ -22,11 +22,11 @@ namespace AsyncAwaitExamples
             _ownsQueue = true;
             _queue = new BlockingCollection<(SendOrPostCallback d, object? state)>();
             _disposing = new CancellationTokenSource();
-            Task.Run(Drain);
+            Task.Run(MessagePump);
         }
 
-        /// <summary>Creates a new synchronisation context which executes work on the provided
-        /// queue.</summary>
+        /// <summary>Creates a new synchronisation context which forwards work to another instance.
+        /// The new context doesn't own the master, and dispose on the slave is a no-op.</summary>
         private BasicSynchronizationContext(BasicSynchronizationContext master)
         {
             _ownsQueue = false;
@@ -34,7 +34,11 @@ namespace AsyncAwaitExamples
             _disposing = master._disposing;
         }
 
-        private void Drain()
+        /// <summary>The "message pump" or "event loop" of this synchronisation context. This is
+        /// conceptually similar to the JS event loop in that there's only a single thread of
+        /// execution running those messages. If there aren't any messages to run, the thread will
+        /// block until there are.</summary>
+        private void MessagePump()
         {
             Thread.CurrentThread.Name = nameof(BasicSynchronizationContext) + "Thread";
             var oldSyncCtx = SynchronizationContext.Current;
@@ -61,8 +65,11 @@ namespace AsyncAwaitExamples
             }
         }
 
+        /// <summary>Add an item to this synchronisation context for later execution.</summary>
         public override void Post(SendOrPostCallback d, object? state) => _queue.Add((d, state));
 
+        /// <summary>Add an item to this synchronisation context for later execution and block until
+        /// it has finished running. Beware of deadlocks when using this.</summary>
         public override void Send(SendOrPostCallback d, object? state)
         {
             var finished = new TaskCompletionSource<bool>();
