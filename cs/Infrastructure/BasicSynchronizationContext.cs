@@ -7,6 +7,8 @@ namespace AsyncAwaitExamples
 {
     /// <summary>A simple synchronisation context which uses a single thread to run one piece of
     /// work at a time. Work is processed FIFO.</summary>
+    /// <remarks>This should not be used for anything more than instruction. Don't go using this
+    /// in a production project as it might break everything and steal your babies.</remarks>
     public sealed class BasicSynchronizationContext : SynchronizationContext, IDisposable
     {
         private readonly bool _ownsQueue;
