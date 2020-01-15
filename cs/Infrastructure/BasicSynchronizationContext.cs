@@ -14,7 +14,6 @@ namespace AsyncAwaitExamples
         private readonly bool _ownsQueue;
         private readonly BlockingCollection<(SendOrPostCallback d, object? state)> _queue;
         private readonly CancellationTokenSource _disposing;
-        private readonly Ticker _executedCount;
 
         /// <summary>Creates a new synchronisation context which runs work on a dedicated thread.
         /// </summary>
@@ -23,7 +22,6 @@ namespace AsyncAwaitExamples
             _ownsQueue = true;
             _queue = new BlockingCollection<(SendOrPostCallback d, object? state)>();
             _disposing = new CancellationTokenSource();
-            _executedCount = new Ticker();
             Task.Run(Drain);
         }
 
@@ -34,7 +32,6 @@ namespace AsyncAwaitExamples
             _ownsQueue = false;
             _queue = master._queue;
             _disposing = master._disposing;
-            _executedCount = master._executedCount;
         }
 
         private void Drain()
@@ -54,7 +51,6 @@ namespace AsyncAwaitExamples
                     {
                         Console.WriteLine("Unhandled exception " + ex);
                     }
-                    _executedCount.Tick();
                 }
             }
             catch (OperationCanceledException) { }
@@ -64,8 +60,6 @@ namespace AsyncAwaitExamples
                 _queue.Dispose();
             }
         }
-
-        public long ExecutedCount => _executedCount.Value;
 
         public override void Post(SendOrPostCallback d, object? state) => _queue.Add((d, state));
 
@@ -118,11 +112,5 @@ namespace AsyncAwaitExamples
             disposedValue = true;
         }
         #endregion
-
-        class Ticker
-        {
-            public long Value;
-            public void Tick() => Interlocked.Increment(ref Value);
-        }
     }
 }
