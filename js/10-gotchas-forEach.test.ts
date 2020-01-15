@@ -27,7 +27,7 @@ it("Don't await array.forEach()", async () => {
     const result = await forceAsync(item);
     results.push(result);
   });
-  expect(results).toEqual(input);
+  expect(results).toEqual([]); // You might expect this to equal `input`, but it doesn't.
 });
 
 it("Don't await array.map() directly", async () => {
@@ -35,5 +35,5 @@ it("Don't await array.map() directly", async () => {
     const result = await forceAsync(item);
     return result;
   });
-  expect(results).toEqual(input);
+  expect(results).not.toEqual(input); // This will be [Promise, Promise], not `input`.
 });
